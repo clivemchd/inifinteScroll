@@ -1,75 +1,64 @@
-/* eslint-disable no-unreachable */
-import './App.css';
+import React from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { fetchAPI, realFetchAPI } from './fetchAPI';
-import { useEffect, useState, useRef } from 'react';
 
-
-const InfiniteScrollingBitch = () => {
-
-	const [itemList, setItemList] = useState([]);
-	const [loading, setLoading] = useState(false);
+const InfiniteScrolling = () => {
+	
+	const [callback, setCallback] = useState({});
+	const [itemList, setitemList] = useState([]);
 	const [page, setPage] = useState(0);
-	const loaderRef = useRef(null);
-	
-	const handleUpdate = (entities, observer) => {
-		const newPage = page + 1;
-		console.log("test ", page, newPage);
-		getData(newPage);
-		setPage(newPage);
-	}
-	
-	const getData = (page) => {
-		setLoading(true);
-		realFetchAPI(page, 10)
-		.then((response) => {
-			setItemList(() => { return [...itemList, ...response]});
-			setLoading(false);
-		})
-	} 
-	
+
+	const observer = React.useRef(new IntersectionObserver(([entry]) => { 
+		console.log("ran callback");
+		return setCallback(entry)
+	}, { threshold : 1 }
+	))
+	const [loaderElem, setLoaderElem] = useState(null)
+
 	useEffect(() => {
-		getData(page);
-
-		// let options = {
-		// 	root: null,
-		// 	rootMargin: '0px',
-		// 	threshold: 0.1
-		// }
+		const currentElem = loaderElem;
+		const currentObserver = observer.current;
 		
-		// let observer = new IntersectionObserver(handleUpdate, options);
-		// observer.observe(loaderRef.current);
-	}, []);
+		console.log("loader ref", loaderElem);	
+		if(currentElem){
+			currentObserver.observe(currentElem);
+		}
 
-	const loadingCSS = {
-		height: "100px",
-		margin: "30px"
-	};
+		return () => {
+			if(currentElem){
+				currentObserver.unobserve(currentElem);
+			}
+		}
+	}, [loaderElem])
 
-	const loadingTextCSS = {
-		border: `1px solid yellow`,  
-		display: loading ? "block" : "none"
-	};
-	
+	useEffect(() => {
+		if(callback && callback.isIntersecting){
+			const newPage = page + 1;
+			setPage(newPage);
+			realFetchAPI(newPage, 10)
+			.then(res => {
+				setitemList(() => [...itemList, ...res]);
+			})
+		}
+	}, [callback])
+
 	return (
 		<div>
-			<div id="scrollArea" style={{ border: `1px solid red`, minHeight: "800px" }} className="App">
-				{itemList.length > 0 && itemList.map((elem, index) => {
+			<div>
+			{itemList.length > 0 && itemList.map((elem, index) => {
 					return (
-						<div key={index} id={`louda`}>
+						<div key={index} id={`louda`} style={{ color:`white`, border: `1px solid white`, margin: `1%`, padding: `1%` }}>
 							<img src={elem.url} height="60px" width="80%" />
 							<h5>{elem.id} - {elem.title}</h5>
 						</div>
 					)
-				})}
+			})}
 			</div>
-			<div
-				ref={loaderRef}
-				style={loadingCSS}
-			>
-			<span style={loadingTextCSS}>Loading...</span>
+			<div ref={setLoaderElem}>
+				<span>Loading...</span>
 			</div>
 		</div>
-  );
+	)
 }
 
-export default InfiniteScrollingBitch;
+export default InfiniteScrolling
