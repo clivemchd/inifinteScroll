@@ -7,13 +7,12 @@ const InfiniteScrolling = () => {
 	const [callback, setCallback] = useState({});
 	const [itemList, setitemList] = useState([]);
 	const [page, setPage] = useState(0);
-
-	const observer = useRef(new IntersectionObserver(([entry]) => { setCallback(entry) }, 
-	{ rootMargin: '1px', threshold : 1 }
-	))
 	const [loaderElem, setLoaderElem] = useState(null)
+	let observer = useRef()
 
 	useEffect(() => {
+		observer.current = new IntersectionObserver(([entry]) => { setCallback(entry) }, 
+		{ rootMargin: '1px', threshold : 1 })
 		const currentElem = loaderElem;
 		const currentObserver = observer.current;
 		
