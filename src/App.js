@@ -1,6 +1,6 @@
 import React from 'react'
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { fetchAPI, realFetchAPI } from './fetchAPI';
+import { useEffect, useState, useRef } from 'react';
+import { realFetchAPI } from './fetchAPI';
 
 const InfiniteScrolling = () => {
 	
@@ -8,7 +8,7 @@ const InfiniteScrolling = () => {
 	const [itemList, setitemList] = useState([]);
 	const [page, setPage] = useState(0);
 
-	const observer = React.useRef(new IntersectionObserver(([entry]) => { setCallback(entry) }, 
+	const observer = useRef(new IntersectionObserver(([entry]) => { setCallback(entry) }, 
 	{ rootMargin: '1px', threshold : 1 }
 	))
 	const [loaderElem, setLoaderElem] = useState(null)
@@ -44,7 +44,7 @@ const InfiniteScrolling = () => {
 			<div>
 			{itemList.length > 0 && itemList.map((elem, index) => {
 					return (
-						<div key={index} id={`louda-${index}`} style={{ color:`white`, border: `1px solid white`, margin: `1%`, padding: `1%` }}>
+						<div key={index} id={`content`} style={{ color:`white`, border: `1px solid white`, margin: `1%`, padding: `1%` }}>
 							<img src={elem.url} height="60px" width="80%" />
 							<h5>{elem.id} - {elem.title}</h5>
 						</div>
