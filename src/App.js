@@ -8,10 +8,8 @@ const InfiniteScrolling = () => {
 	const [itemList, setitemList] = useState([]);
 	const [page, setPage] = useState(0);
 
-	const observer = React.useRef(new IntersectionObserver(([entry]) => { 
-		console.log("ran callback");
-		return setCallback(entry)
-	}, { threshold : 1 }
+	const observer = React.useRef(new IntersectionObserver(([entry]) => { setCallback(entry) }, 
+	{ rootMargin: '1px', threshold : 1 }
 	))
 	const [loaderElem, setLoaderElem] = useState(null)
 
@@ -19,7 +17,6 @@ const InfiniteScrolling = () => {
 		const currentElem = loaderElem;
 		const currentObserver = observer.current;
 		
-		console.log("loader ref", loaderElem);	
 		if(currentElem){
 			currentObserver.observe(currentElem);
 		}
@@ -47,7 +44,7 @@ const InfiniteScrolling = () => {
 			<div>
 			{itemList.length > 0 && itemList.map((elem, index) => {
 					return (
-						<div key={index} id={`louda`} style={{ color:`white`, border: `1px solid white`, margin: `1%`, padding: `1%` }}>
+						<div key={index} id={`louda-${index}`} style={{ color:`white`, border: `1px solid white`, margin: `1%`, padding: `1%` }}>
 							<img src={elem.url} height="60px" width="80%" />
 							<h5>{elem.id} - {elem.title}</h5>
 						</div>
@@ -55,7 +52,7 @@ const InfiniteScrolling = () => {
 			})}
 			</div>
 			<div ref={setLoaderElem}>
-				<span>Loading...</span>
+				<span style={{ color:'#ffffff'}} >Loading...</span>
 			</div>
 		</div>
 	)
