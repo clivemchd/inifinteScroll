@@ -4,7 +4,7 @@ import { fetchAPI, realFetchAPI } from './fetchAPI';
 import { useEffect, useState, useRef } from 'react';
 
 
-const InfiniteScrollingBitch = () => {
+const InfiniteScrolling = () => {
 
 	const [itemList, setItemList] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -57,7 +57,7 @@ const InfiniteScrollingBitch = () => {
 			<div id="scrollArea" style={{ border: `1px solid red`, minHeight: "800px" }} className="App">
 				{itemList.length > 0 && itemList.map((elem, index) => {
 					return (
-						<div key={index} id={`louda`}>
+						<div key={index} id={`content`}>
 							<img src={elem.url} height="60px" width="80%" />
 							<h5>{elem.id} - {elem.title}</h5>
 						</div>
@@ -74,4 +74,4 @@ const InfiniteScrollingBitch = () => {
   );
 }
 
-export default InfiniteScrollingBitch;
+export default InfiniteScrolling;

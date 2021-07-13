@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { fetchAPI } from './fetchAPI';
 
-export class InfiniteScrollingBitch extends Component {
+export class InfiniteScrolling extends Component {
 	constructor() {
     super();
     this.state = {
@@ -83,4 +83,4 @@ export class InfiniteScrollingBitch extends Component {
 	}
 }
 
-export default InfiniteScrollingBitch
+export default InfiniteScrolling
